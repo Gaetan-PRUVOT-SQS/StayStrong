@@ -172,13 +172,20 @@ class MainActivity : ComponentActivity() {
                         LaunchedEffect(seanceState?.etat) {
                             val etatCourant = seanceState
                             if (etatCourant != null && etatCourant.etat == EtatSeance.FIN && !jourFinMarque) {
+                                val detail = seanceViewModel.getDetailReps()
                                 progression.marquerJourFait(
                                     etatCourant.exerciceId,
                                     etatCourant.niveauNumero,
-                                    etatCourant.jourNumero
+                                    etatCourant.jourNumero,
+                                    detail
                                 )
                                 tickProgression = tickProgression + 1
                                 jourFinMarque = true
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Progression sauvegardée",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
                                 if (modeComplet) {
                                     val total = ProgrammeData.exercices.size
@@ -358,10 +365,16 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             Ecran.EXERCICES -> {
+                                val statsAccueil = remember(sessionsAgenda) {
+                                    calculerStats(sessionsAgenda)
+                                }
                                 ExercicesScreen(
                                     dernierePosition = dernierePosition,
                                     derniereSeanceComplete = derniereSeanceComplete,
                                     modeSombre = modeSombre,
+                                    seancesCetteSemaine = statsAccueil.seancesCetteSemaine,
+                                    streakJours = statsAccueil.streakJours,
+                                    rappelExport = progression.fautRappelerExport(),
                                     onChoisirExercice = { id ->
                                         exerciceId = id
                                         modeComplet = false
@@ -387,6 +400,8 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onExporter = {
                                         partagerExport(progression.exporterJson())
+                                        progression.noterExportFait()
+                                        tickProgression = tickProgression + 1
                                     },
                                     onImporter = {
                                         // préremplit avec le presse-papiers si possible
@@ -530,13 +545,19 @@ class MainActivity : ComponentActivity() {
                                 if (state != null && state.etat != EtatSeance.FIN) {
                                     SeanceScreen(
                                         state = state,
+                                        consigneForme = ConsignesForme.pour(
+                                            state.exerciceId,
+                                            state.niveauNumero
+                                        ),
                                         indexExercice = if (modeComplet) indexExoComplet else 0,
                                         totalExercices = if (modeComplet) {
                                             ProgrammeData.exercices.size
                                         } else {
                                             0
                                         },
-                                        onSerieTerminee = { seanceViewModel.serieTerminee() },
+                                        onSerieTerminee = { reps ->
+                                            seanceViewModel.serieTerminee(reps)
+                                        },
                                         onPause = { seanceViewModel.pause() },
                                         onReprendre = { seanceViewModel.reprendre() },
                                         onSerieSuivante = { seanceViewModel.serieSuivante() },

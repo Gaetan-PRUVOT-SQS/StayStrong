@@ -6,14 +6,14 @@ Application Android **hors ligne** pour un circuit au poids de corps :
 
 **Tractions → Pompes → Squats → Killy → Gainage**
 
-Programmes par niveaux, chrono de repos, séance complète, agenda, articles, export/import.
+Programmes par niveaux, chrono de repos, saisie des séries max, séance complète, agenda avec historique, articles, export/import.
 
 <p align="center">
   <img src="assets/gifs/demo-parcours.gif" alt="Parcours de l'application Stay Strong" width="280"/>
 </p>
 
 <p align="center">
-  <em>Aperçu du parcours : démarrage → entraînement → séance → agenda → articles</em>
+  <em>Aperçu : démarrage → entraînement → niveaux → séance → agenda → articles</em>
 </p>
 
 ---
@@ -22,7 +22,7 @@ Programmes par niveaux, chrono de repos, séance complète, agenda, articles, ex
 
 | Accueil | Entraînement | Articles |
 |:---:|:---:|:---:|
-| <img src="assets/screenshots/01-demarrage.png" width="200" alt="Écran de démarrage"/> | <img src="assets/screenshots/02-entrainement.png" width="200" alt="Écran entraînement"/> | <img src="assets/screenshots/articles-liste.png" width="200" alt="Écran Articles"/> |
+| <img src="assets/screenshots/01-demarrage.png" width="200" alt="Écran de démarrage"/> | <img src="assets/screenshots/02-entrainement.png" width="200" alt="Écran entraînement avec Continuer et stats"/> | <img src="assets/screenshots/articles-liste.png" width="200" alt="Liste des articles"/> |
 
 | Niveaux | Jours | Détail du jour |
 |:---:|:---:|:---:|
@@ -30,7 +30,7 @@ Programmes par niveaux, chrono de repos, séance complète, agenda, articles, ex
 
 | Séance | Agenda | Séance complète |
 |:---:|:---:|:---:|
-| <img src="assets/screenshots/08-seance.png" width="200" alt="Séance en cours"/> | <img src="assets/screenshots/09-agenda.png" width="200" alt="Agenda"/> | <img src="assets/screenshots/10-seance-complete.png" width="200" alt="Séance complète"/> |
+| <img src="assets/screenshots/08-seance.png" width="200" alt="Séance avec consigne et image"/> | <img src="assets/screenshots/09-agenda.png" width="200" alt="Agenda et historique"/> | <img src="assets/screenshots/10-seance-complete.png" width="200" alt="Réglage séance complète"/> |
 
 | Lecture d’article |
 |:---:|
@@ -49,7 +49,7 @@ Programmes par niveaux, chrono de repos, séance complète, agenda, articles, ex
 ### Lancer une séance
 
 <p align="center">
-  <img src="assets/gifs/demo-seance.gif" alt="Démarrage d'une séance" width="260"/>
+  <img src="assets/gifs/demo-seance.gif" alt="Détail du jour puis séance" width="260"/>
 </p>
 
 ---
@@ -64,6 +64,7 @@ Programmes par niveaux, chrono de repos, séance complète, agenda, articles, ex
 | `programmes/` | PDF sources des niveaux (5 exercices) |
 | `articles/` | Guides PDF intégrés dans l’app |
 | `design/` | Maquettes UI de référence |
+| `docs/` | Protocole et rapports QA |
 
 ---
 
@@ -75,18 +76,31 @@ Programmes par niveaux, chrono de repos, séance complète, agenda, articles, ex
 
 ### Entraînement
 - 5 exercices, 5 niveaux chacun
+- Gros bouton **Continuer** (dernier exercice + niveau + jour)
+- Mini-stats : séances sur 7 jours + **streak** (jours d’affilée)
 - Jour suggéré, détail des séries, consigne de forme
-- **Séance** : séries, maintien chrono (Killy / Gainage), repos 60 s
+- **Séance** : séries fixes, **saisie des reps sur les max**, maintien chrono (Killy / Gainage), repos 60 s
+- Couleurs distinctes : **cuivre** (effort), **vert** (repos), **jaune** (série suivante)
+- Image de l’exercice + phrase de forme pendant la série
 - **Pause / Reprendre**, **Passer le chrono**
 - **Séance complète** : les 5 exercices le même jour
-- **Reprendre** : dernier niveau/jour + dernière séance complète
 - Tests de passage pour débloquer le niveau suivant
-- **Agenda** + stats simples
-- **Export / import** JSON
+- Toast **« Progression sauvegardée »** en fin de jour
+- Rappel d’**export JSON** (tous les 14 jours environ)
+- **Export / import** JSON (presse-papiers + partage)
+
+### Agenda & historique
+- Calendrier des jours d’entraînement
+- Streak, séances de la semaine et du mois
+- Graphique simple des **7 derniers jours**
+- Total de séances et dernier niveau **par exercice**
+- Détail des reps max enregistrées (ex. `S5: 12`)
 
 ### Articles
 1. *Ce que chaque exercice apporte*
 2. *Pourquoi faire le circuit complet*
+3. *Échauffement avant le circuit*
+4. *Récupération entre les jours*
 
 ### Technique
 - 100 % hors ligne
@@ -100,7 +114,7 @@ Programmes par niveaux, chrono de repos, séance complète, agenda, articles, ex
 ## Prérequis
 
 - macOS, Linux ou Windows
-- **JDK 17** (ou le JBR d’Android Studio)
+- **JDK 17** (ou le JBR d’Android Studio) — Java 21+ peut faire échouer Gradle avec ce projet
 - **Android Studio** ou SDK Android
 - Téléphone (débogage USB) ou émulateur
 - Min SDK **26** (Android 8.0)
@@ -172,6 +186,7 @@ StayStrongApp/
 │       │   │   ├── ProgrammeData.kt
 │       │   │   ├── ProgressionStore.kt
 │       │   │   ├── SeanceViewModel.kt
+│       │   │   ├── HistoriqueStats.kt
 │       │   │   ├── ArticlesData.kt
 │       │   │   ├── TestsPassage.kt
 │       │   │   └── ui/          # écrans Compose + FooterNav + thème
@@ -185,10 +200,11 @@ StayStrongApp/
 
 ### Rôles principaux
 - **`ProgrammeData`** : niveaux, jours, séries, repos
-- **`ProgressionStore`** : jours faits, agenda, export/import, Reprendre, mode sombre
-- **`SeanceController` / `SeanceViewModel`** : logique de séance + chrono
-- **`ArticlesData`** : contenu des articles
-- **`MainActivity`** : navigation, footer, vibration
+- **`ProgressionStore`** : jours faits, agenda, export/import, Continuer, mode sombre, rappel export
+- **`SeanceController` / `SeanceViewModel`** : logique de séance, chrono, saisie des max
+- **`HistoriqueStats`** : streak, graphe 7 jours, totaux par exercice
+- **`ArticlesData`** : contenu des 4 articles
+- **`MainActivity`** : navigation, footer, vibration, toast de sauvegarde
 - **Écrans `ui/`** : affichage Compose
 
 ---
@@ -197,28 +213,38 @@ StayStrongApp/
 
 ```bash
 cd StayStrongApp
+
+# unitaires
 ./gradlew :app:testDebugUnitTest
+
+# instrumentés (appareil branché)
+./gradlew :app:connectedDebugAndroidTest
 ```
+
+Protocole QA ISTQB : [`docs/PROTOCOLE-QA-ISTQB.md`](docs/PROTOCOLE-QA-ISTQB.md).
 
 ---
 
 ## Utilisation
 
-1. **Commencer** → footer **Entraînement**
-2. Choisir un exercice (ou **Reprendre** / **séance complète**)
+1. **Commencer** → écran **Entraînement**
+2. **Continuer** (si une séance a déjà été commencée) ou choisir un exercice / **séance complète**
 3. Niveau → jour → **Start**
-4. Séries, repos (ou **Passer le chrono**), fin de jour
-5. Consulter l’**Agenda** ou les **Articles** via le footer
+4. Séries : sur une série **max**, saisir le nombre de reps puis valider
+5. Repos (vert) → **Série suivante** (jaune) → fin de jour
+6. **Agenda & historique** pour le calendrier et les stats
+7. **Articles** pour échauffement, récupération, etc.
+8. **Export** de temps en temps pour sauvegarder la progression
 
 ---
 
 ## Limites (v1)
 
-- Pas de saisie du nombre de reps sur les séries « max »
 - Pas de son (vibration + texte)
 - Pas de notification en arrière-plan
-- Pas de cloud (export/import JSON local)
+- Pas de cloud (export/import JSON local uniquement)
 - Progression locale à l’appareil
+- Saisie des max : reps uniquement (pas de saisie manuelle du temps sur maintien max)
 
 ---
 

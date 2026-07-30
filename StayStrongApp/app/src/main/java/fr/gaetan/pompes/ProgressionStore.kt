@@ -11,7 +11,9 @@ data class SessionAgenda(
     val exerciceId: String,
     val exerciceNom: String,
     val niveau: Int,
-    val jourProgramme: Int
+    val jourProgramme: Int,
+    // ex. "S5: 14" pour les séries max
+    val detailReps: String = ""
 )
 
 data class AlertePause(
@@ -34,7 +36,12 @@ data class PositionSeanceComplete(
 
 interface ProgressionRepository {
     fun getJoursFaits(exerciceId: String, niveau: Int): Set<Int>
-    fun marquerJourFait(exerciceId: String, niveau: Int, numeroJour: Int)
+    fun marquerJourFait(
+        exerciceId: String,
+        niveau: Int,
+        numeroJour: Int,
+        detailReps: String = ""
+    )
     fun getJourSuggere(exerciceId: String, niveau: Int): Int
     fun getSessions(): List<SessionAgenda>
     fun getDatesEntrainement(): Set<String>
@@ -54,6 +61,10 @@ interface ProgressionRepository {
     // mode sombre
     fun getModeSombre(): Boolean
     fun setModeSombre(actif: Boolean)
+
+    // rappel d'export JSON (tous les 14 jours)
+    fun noterExportFait()
+    fun fautRappelerExport(): Boolean
 }
 
 class ProgressionMemoire : ProgressionRepository {
@@ -64,6 +75,7 @@ class ProgressionMemoire : ProgressionRepository {
     private var derniereSeance: PositionSeanceComplete? = null
     private var dernierExoId: String? = null
     private var modeSombre = false
+    private var dateDernierExport: String? = null
     var dateTest: String = LocalDate.now().toString()
 
     private fun cle(exerciceId: String, niveau: Int): String {
@@ -74,7 +86,12 @@ class ProgressionMemoire : ProgressionRepository {
         return faits[cle(exerciceId, niveau)]?.toSet() ?: emptySet()
     }
 
-    override fun marquerJourFait(exerciceId: String, niveau: Int, numeroJour: Int) {
+    override fun marquerJourFait(
+        exerciceId: String,
+        niveau: Int,
+        numeroJour: Int,
+        detailReps: String
+    ) {
         val set = faits.getOrPut(cle(exerciceId, niveau)) { mutableSetOf() }
         set.add(numeroJour)
         val nom = ProgrammeData.getExercice(exerciceId).nom
@@ -84,7 +101,8 @@ class ProgressionMemoire : ProgressionRepository {
                 exerciceId = exerciceId,
                 exerciceNom = nom,
                 niveau = niveau,
-                jourProgramme = numeroJour
+                jourProgramme = numeroJour,
+                detailReps = detailReps
             )
         )
         // mémorise aussi la position
@@ -193,6 +211,27 @@ class ProgressionMemoire : ProgressionRepository {
     override fun setModeSombre(actif: Boolean) {
         modeSombre = actif
     }
+
+    override fun noterExportFait() {
+        dateDernierExport = dateTest
+    }
+
+    override fun fautRappelerExport(): Boolean {
+        if (sessions.isEmpty()) {
+            return false
+        }
+        val dernier = dateDernierExport
+        if (dernier == null || dernier.isEmpty()) {
+            return true
+        }
+        return try {
+            val d = LocalDate.parse(dernier)
+            val auj = LocalDate.parse(dateTest)
+            ChronoUnit.DAYS.between(d, auj) >= 14
+        } catch (e: Exception) {
+            true
+        }
+    }
 }
 
 class ProgressionStore(context: Context) : ProgressionRepository {
@@ -211,14 +250,24 @@ class ProgressionStore(context: Context) : ProgressionRepository {
         return texte.split(",").map { it.toInt() }.toSet()
     }
 
-    override fun marquerJourFait(exerciceId: String, niveau: Int, numeroJour: Int) {
+    override fun marquerJourFait(
+        exerciceId: String,
+        niveau: Int,
+        numeroJour: Int,
+        detailReps: String
+    ) {
         val set = getJoursFaits(exerciceId, niveau).toMutableSet()
         set.add(numeroJour)
         prefs.edit().putString(cle(exerciceId, niveau), set.sorted().joinToString(",")).apply()
 
         val nom = ProgrammeData.getExercice(exerciceId).nom
         val date = LocalDate.now().toString()
-        val ligne = "$date|$exerciceId|$nom|$niveau|$numeroJour"
+        // 6e champ optionnel = détail des max
+        val ligne = if (detailReps.isEmpty()) {
+            "$date|$exerciceId|$nom|$niveau|$numeroJour"
+        } else {
+            "$date|$exerciceId|$nom|$niveau|$numeroJour|$detailReps"
+        }
         val existant = prefs.getString("agenda_sessions", "") ?: ""
         val nouveau = if (existant.isEmpty()) ligne else existant + "\n" + ligne
         prefs.edit().putString("agenda_sessions", nouveau).apply()
@@ -242,14 +291,16 @@ class ProgressionStore(context: Context) : ProgressionRepository {
         val liste = mutableListOf<SessionAgenda>()
         texte.split("\n").forEach { ligne ->
             val parts = ligne.split("|")
-            if (parts.size == 5) {
+            if (parts.size >= 5) {
+                val detail = if (parts.size >= 6) parts[5] else ""
                 liste.add(
                     SessionAgenda(
                         date = parts[0],
                         exerciceId = parts[1],
                         exerciceNom = parts[2],
                         niveau = parts[3].toInt(),
-                        jourProgramme = parts[4].toInt()
+                        jourProgramme = parts[4].toInt(),
+                        detailReps = detail
                     )
                 )
             }
@@ -307,7 +358,11 @@ class ProgressionStore(context: Context) : ProgressionRepository {
         return try {
             val data = parserExportJson(json)
             val lignes = data.sessions.joinToString("\n") {
-                "${it.date}|${it.exerciceId}|${it.exerciceNom}|${it.niveau}|${it.jourProgramme}"
+                if (it.detailReps.isEmpty()) {
+                    "${it.date}|${it.exerciceId}|${it.exerciceNom}|${it.niveau}|${it.jourProgramme}"
+                } else {
+                    "${it.date}|${it.exerciceId}|${it.exerciceNom}|${it.niveau}|${it.jourProgramme}|${it.detailReps}"
+                }
             }
             val editor = prefs.edit()
             editor.putString("agenda_sessions", lignes)
@@ -385,6 +440,27 @@ class ProgressionStore(context: Context) : ProgressionRepository {
     override fun setModeSombre(actif: Boolean) {
         prefs.edit().putBoolean("mode_sombre", actif).apply()
     }
+
+    override fun noterExportFait() {
+        prefs.edit().putString("date_dernier_export", LocalDate.now().toString()).apply()
+    }
+
+    override fun fautRappelerExport(): Boolean {
+        val sessions = getSessions()
+        if (sessions.isEmpty()) {
+            return false
+        }
+        val dernier = prefs.getString("date_dernier_export", null)
+        if (dernier == null || dernier.isEmpty()) {
+            return true
+        }
+        return try {
+            val d = LocalDate.parse(dernier)
+            ChronoUnit.DAYS.between(d, LocalDate.now()) >= 14
+        } catch (e: Exception) {
+            true
+        }
+    }
 }
 
 data class ExportData(
@@ -415,6 +491,9 @@ fun construireExportJson(
         o.put("exerciceNom", s.exerciceNom)
         o.put("niveau", s.niveau)
         o.put("jourProgramme", s.jourProgramme)
+        if (s.detailReps.isNotEmpty()) {
+            o.put("detailReps", s.detailReps)
+        }
         arr.put(o)
     }
     root.put("sessions", arr)
@@ -463,7 +542,8 @@ fun parserExportJson(json: String): ExportData {
                 exerciceId = o.getString("exerciceId"),
                 exerciceNom = o.getString("exerciceNom"),
                 niveau = o.getInt("niveau"),
-                jourProgramme = o.getInt("jourProgramme")
+                jourProgramme = o.getInt("jourProgramme"),
+                detailReps = o.optString("detailReps", "")
             )
         )
     }

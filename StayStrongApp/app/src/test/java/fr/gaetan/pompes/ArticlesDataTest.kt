@@ -7,11 +7,13 @@ import org.junit.Test
 class ArticlesDataTest {
 
     @Test
-    fun deuxArticlesPresents() {
-        assertEquals(2, ArticlesData.articles.size)
+    fun quatreArticlesPresents() {
+        assertEquals(4, ArticlesData.articles.size)
         val ids = ArticlesData.articles.map { it.id }.toSet()
         assertTrue(ids.contains("exercices"))
         assertTrue(ids.contains("circuit"))
+        assertTrue(ids.contains("echauffement"))
+        assertTrue(ids.contains("recuperation"))
     }
 
     @Test

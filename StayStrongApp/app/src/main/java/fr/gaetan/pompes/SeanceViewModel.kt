@@ -33,7 +33,10 @@ data class SeanceUiState(
     // chrono de maintien (gainage / killy)
     val estMaintien: Boolean,
     val maintienTotal: Int,
-    val maintienTermine: Boolean
+    val maintienTermine: Boolean,
+    // série "max" : on demande les reps faites
+    val estSerieMax: Boolean,
+    val minimumMax: Int
 )
 
 // Logique pure testable sans Android
@@ -44,12 +47,15 @@ class SeanceController {
 
     private var vibrationEnAttente = false
     private var jour: JourProgramme? = null
+    // ex. "S5: 14" pour l'agenda
+    private val repsMaxSaisies = mutableListOf<String>()
 
     fun demarrer(exerciceId: String, niveauNumero: Int, jourNumero: Int) {
         val exercice = ProgrammeData.getExercice(exerciceId)
         val j = ProgrammeData.getJour(exerciceId, niveauNumero, jourNumero)
         jour = j
         vibrationEnAttente = false
+        repsMaxSaisies.clear()
         val serie0 = j.series[0]
         val maintien = dureeMaintien(serie0)
         state = SeanceUiState(
@@ -67,15 +73,25 @@ class SeanceController {
             pauseJoursApres = j.pauseJoursApres,
             estMaintien = maintien > 0,
             maintienTotal = maintien,
-            maintienTermine = false
+            maintienTermine = false,
+            estSerieMax = serie0 is SerieMax,
+            minimumMax = minimumSerie(serie0)
         )
     }
 
-    fun serieTerminee() {
+    // repsFaites : obligatoire pour une série max (sinon ignoré)
+    fun serieTerminee(repsFaites: Int? = null) {
         val s = state ?: return
         val j = jour ?: return
         if (s.etat != EtatSeance.SERIE) {
             return
+        }
+        // mémorise les reps sur une série max
+        if (s.estSerieMax) {
+            if (repsFaites == null || repsFaites <= 0) {
+                return
+            }
+            repsMaxSaisies.add("S${s.indexSerie + 1}: $repsFaites")
         }
         if (s.indexSerie >= j.series.size - 1) {
             state = s.copy(etat = EtatSeance.FIN)
@@ -88,9 +104,15 @@ class SeanceController {
             reposTermine = false,
             estMaintien = false,
             maintienTotal = 0,
-            maintienTermine = false
+            maintienTermine = false,
+            estSerieMax = false,
+            minimumMax = 0
         )
         vibrationEnAttente = false
+    }
+
+    fun getDetailReps(): String {
+        return repsMaxSaisies.joinToString(", ")
     }
 
     fun pause() {
@@ -131,7 +153,9 @@ class SeanceController {
                 reposTermine = false,
                 estMaintien = maintien > 0,
                 maintienTotal = maintien,
-                maintienTermine = false
+                maintienTermine = false,
+                estSerieMax = serie is SerieMax,
+                minimumMax = minimumSerie(serie)
             )
             vibrationEnAttente = false
         }
@@ -205,6 +229,7 @@ class SeanceController {
         state = null
         jour = null
         vibrationEnAttente = false
+        repsMaxSaisies.clear()
     }
 
     fun consommerVibration(): Boolean {
@@ -218,6 +243,14 @@ class SeanceController {
     private fun dureeMaintien(serie: TypeSerie): Int {
         return when (serie) {
             is SerieTemps -> serie.secondes
+            is SerieTempsMax -> serie.minimumSecondes
+            else -> 0
+        }
+    }
+
+    private fun minimumSerie(serie: TypeSerie): Int {
+        return when (serie) {
+            is SerieMax -> serie.minimum
             is SerieTempsMax -> serie.minimumSecondes
             else -> 0
         }
@@ -263,9 +296,13 @@ class SeanceViewModel : ViewModel() {
         lancerChrono()
     }
 
-    fun serieTerminee() {
-        controller.serieTerminee()
+    fun serieTerminee(repsFaites: Int? = null) {
+        controller.serieTerminee(repsFaites)
         publier()
+    }
+
+    fun getDetailReps(): String {
+        return controller.getDetailReps()
     }
 
     fun pause() {

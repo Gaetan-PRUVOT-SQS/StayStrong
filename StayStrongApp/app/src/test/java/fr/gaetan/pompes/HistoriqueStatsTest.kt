@@ -17,6 +17,8 @@ class HistoriqueStatsTest {
         val stats = calculerStats(sessions, auj)
         assertEquals(3, stats.streakJours)
         assertEquals(3, stats.seancesCeMois)
+        assertEquals(3, stats.seancesCetteSemaine)
+        assertEquals(7, stats.joursSemaine.size)
     }
 
     @Test
@@ -30,5 +32,8 @@ class HistoriqueStatsTest {
         assertEquals(3, stats.dernierNiveauParExo["pompes"])
         assertEquals(2, stats.dernierNiveauParExo["killy"])
         assertEquals(0, stats.dernierNiveauParExo["squats"])
+        assertEquals(2, stats.totalParExo["pompes"])
+        assertEquals(1, stats.totalParExo["killy"])
+        assertEquals(0, stats.totalParExo["squats"])
     }
 }

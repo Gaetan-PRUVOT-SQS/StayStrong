@@ -131,6 +131,69 @@ object ArticlesData {
                     emoji = "⚠️"
                 )
             )
+        ),
+        Article(
+            id = "echauffement",
+            titre = "Échauffement avant le circuit",
+            sousTitre = "5 à 8 minutes pour préparer le corps",
+            emoji = "🔥",
+            resume = "Un échauffement court, sans matériel, pour arriver prêt sur les tractions et les pompes.",
+            blocs = listOf(
+                BlocArticle(
+                    titre = "Pourquoi s'échauffer",
+                    texte = "Le circuit commence fort avec les tractions. Un corps froid, surtout au niveau des épaules et des poignets, augmente le risque de mauvaise forme et de tiraillements. L'échauffement n'a pas besoin d'être long : l'objectif est d'élever un peu la température et de réveiller les articulations qui vont travailler.",
+                    emoji = "📖"
+                ),
+                BlocArticle(
+                    titre = "Routine simple (5–8 min)",
+                    texte = "1. 1 à 2 minutes de marche sur place ou de jumping jacks légers.\n2. Cercles d'épaules (avant / arrière), 10 de chaque côté.\n3. Rotations de poignets et de hanches, 10 de chaque côté.\n4. Squats au poids de corps lents : 8 à 10 reps, amplitude confortable.\n5. 5 à 8 pompes sur les genoux ou surélevées, très contrôlées.\n6. Option traction : 1 série de 3 à 5 tractions assistées (bande, chaise) ou de scapular pulls (épaules qui descendent sans plier les coudes).",
+                    emoji = "⏱"
+                ),
+                BlocArticle(
+                    titre = "Ce qu'il ne faut pas faire",
+                    texte = "Éviter les étirements statiques longs juste avant la force (tenir 30–60 s en position étirée). Préférer le mouvement dynamique. Ne pas « vider » les bras avant les tractions : l'échauffement doit préparer, pas fatiguer.",
+                    emoji = "🚫"
+                ),
+                BlocArticle(
+                    titre = "Signal d'arrêt",
+                    texte = "Douleur vive (pas une simple sensation d'effort), claquement d'épaule, ou gêne qui s'aggrave en s'échauffant : ne pas forcer. Repose le jour et, si ça revient, vois un pro de santé.",
+                    emoji = "⚠️"
+                )
+            )
+        ),
+        Article(
+            id = "recuperation",
+            titre = "Récupération entre les jours",
+            sousTitre = "Pauses, sommeil, signes de surcharge",
+            emoji = "🌙",
+            resume = "Les jours de pause du programme ne sont pas du « rien ». Ils font partie de la progression.",
+            blocs = listOf(
+                BlocArticle(
+                    titre = "Pourquoi le programme impose des pauses",
+                    texte = "Chaque fiche indique 1 ou 2 jours de pause minimum avant le jour suivant. Ce n'est pas une option de confort : c'est le temps où le corps consolide la force (surtout tendons et système nerveux). Enchaîner trop tôt donne l'impression d'avancer, mais stagne souvent et multiplie les nœuds d'épaule ou de coude.",
+                    emoji = "📖"
+                ),
+                BlocArticle(
+                    titre = "Que faire les jours off",
+                    texte = "• Marche, vélo léger, mobilité douce : oui.\n• Séance de tractions ou de pompes « en plus » : non.\n• Si tu as envie de bouger : 10 minutes de mobilité d'épaules / hanches ou un gainage très léger (loin de l'échec).\n• Priorité n°1 : le sommeil. Une nuit courte impacte plus la progression qu'un repas moyen.",
+                    emoji = "🛏"
+                ),
+                BlocArticle(
+                    titre = "Signes de surcharge",
+                    texte = "• Performance qui baisse 2 séances de suite sans raison claire.\n• Douleur articulaire au réveil (épaule, coude, genou) qui ne disparaît pas en 10 minutes d'échauffement.\n• Fatigue générale, irritabilité, sommeil pourri.\n\nDans ces cas : repousse le jour suivant, redescends d'un cran sur le volume, ou refais le même jour plus tard plutôt que de forcer le niveau suivant.",
+                    emoji = "📉"
+                ),
+                BlocArticle(
+                    titre = "Lier les cinq exercices",
+                    texte = "Idéalement, les jours de pause des cinq programmes tombent ensemble. Sinon tu n'as plus jamais de vraie journée de récupération complète. Si tu ne fais qu'un ou deux exercices, respecte quand même la pause indiquée sur la fiche de celui que tu viens de finir.",
+                    emoji = "🔄"
+                ),
+                BlocArticle(
+                    titre = "Note",
+                    texte = "Ces repères restent généraux. En cas de blessure ou de douleur persistante, l'avis d'un professionnel de santé prime sur tout programme écrit.",
+                    emoji = "⚠️"
+                )
+            )
         )
     )
 

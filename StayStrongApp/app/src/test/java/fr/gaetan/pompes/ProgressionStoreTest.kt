@@ -113,4 +113,26 @@ class ProgressionStoreTest {
         store.setModeSombre(true)
         assertTrue(store.getModeSombre())
     }
+
+    @Test
+    fun rappelExportApresSeanceSansExport() {
+        val store = ProgressionMemoire()
+        store.dateTest = "2026-07-30"
+        assertTrue(!store.fautRappelerExport())
+        store.marquerJourFait("pompes", 1, 1)
+        assertTrue(store.fautRappelerExport())
+        store.noterExportFait()
+        assertTrue(!store.fautRappelerExport())
+    }
+
+    @Test
+    fun detailRepsConserveAExportImport() {
+        val store = ProgressionMemoire()
+        store.dateTest = "2026-07-30"
+        store.marquerJourFait("pompes", 1, 1, "S5: 14")
+        val json = store.exporterJson()
+        val store2 = ProgressionMemoire()
+        assertTrue(store2.importerJson(json))
+        assertEquals("S5: 14", store2.getSessions()[0].detailReps)
+    }
 }

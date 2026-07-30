@@ -72,7 +72,8 @@ class SeanceViewModelTest {
             repeat(c.state!!.tempsRestant) { c.tick() }
             c.serieSuivante()
         }
-        c.serieTerminee()
+        // dernière série = max → on saisit les reps
+        c.serieTerminee(10)
         assertEquals(EtatSeance.FIN, c.state!!.etat)
     }
 
@@ -123,5 +124,24 @@ class SeanceViewModelTest {
         assertEquals(EtatSeance.REPOS, c.state!!.etat)
         assertTrue(c.state!!.reposTermine)
         assertEquals(0, c.state!!.tempsRestant)
+    }
+
+    @Test
+    fun serieMaxExigeLesReps() {
+        val c = SeanceController()
+        c.demarrer("pompes", 1, 1)
+        // séries 1-4 fixes, série 5 = max
+        repeat(4) {
+            c.serieTerminee()
+            repeat(c.state!!.tempsRestant) { c.tick() }
+            c.serieSuivante()
+        }
+        assertTrue(c.state!!.estSerieMax)
+        // sans reps : ne valide pas
+        c.serieTerminee(null)
+        assertEquals(EtatSeance.SERIE, c.state!!.etat)
+        c.serieTerminee(12)
+        assertEquals(EtatSeance.FIN, c.state!!.etat)
+        assertEquals("S5: 12", c.getDetailReps())
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -123,29 +124,89 @@ fun AgendaScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
+                    text = "🔥  ${stats.streakJours} jour(s) d'affilée",
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = AccentCuivre
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Cette semaine : ${stats.seancesCetteSemaine} séance(s)",
+                    fontSize = 15.sp,
+                    color = texteApp
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
                     text = "Ce mois : ${stats.seancesCeMois} séance(s)",
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
                     color = texteApp
                 )
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 Text(
-                    text = "Série en cours : ${stats.streakJours} jour(s)",
-                    fontSize = 15.sp,
-                    color = texteApp
+                    text = "7 derniers jours",
+                    fontSize = 13.sp,
+                    color = texteGrisApp
                 )
                 Spacer(modifier = Modifier.height(10.dp))
+                // petit graphique en barres
+                val maxBarre = stats.joursSemaine.maxOfOrNull { it.nbSeances } ?: 0
+                val hauteurMax = 56
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height((hauteurMax + 28).dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    stats.joursSemaine.forEach { jour ->
+                        val h = if (maxBarre <= 0 || jour.nbSeances <= 0) {
+                            4
+                        } else {
+                            val ratio = jour.nbSeances.toFloat() / maxBarre.toFloat()
+                            (4 + (hauteurMax - 4) * ratio).toInt()
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            if (jour.nbSeances > 0) {
+                                Text(
+                                    text = "${jour.nbSeances}",
+                                    fontSize = 11.sp,
+                                    color = texteGrisApp
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .width(18.dp)
+                                    .height(h.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(
+                                        if (jour.nbSeances > 0) AccentCuivre else secondaireApp
+                                    )
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = jour.libelle,
+                                fontSize = 12.sp,
+                                color = texteGrisApp
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(14.dp))
                 Text(
-                    text = "Dernier niveau par exercice",
+                    text = "Total par exercice",
                     fontSize = 13.sp,
                     color = texteGrisApp
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 ProgrammeData.exercices.forEach { exo ->
+                    val total = stats.totalParExo[exo.id] ?: 0
                     val niv = stats.dernierNiveauParExo[exo.id] ?: 0
-                    val texteNiv = if (niv <= 0) "—" else "Niv. $niv"
+                    val texteNiv = if (niv <= 0) "—" else "niv. $niv"
                     Text(
-                        text = "${exo.nom} : $texteNiv",
+                        text = "${exo.nom} : $total séance(s) · $texteNiv",
                         fontSize = 14.sp,
                         color = texteApp
                     )
@@ -272,6 +333,14 @@ fun AgendaScreen(
                             fontSize = 14.sp,
                             color = texteGrisApp
                         )
+                        if (session.detailReps.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "Max : ${session.detailReps}",
+                                fontSize = 13.sp,
+                                color = AccentCuivre
+                            )
+                        }
                     }
                 }
             }

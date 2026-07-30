@@ -95,9 +95,9 @@ class ParcoursUiTest {
         device.wait(Until.findObject(By.text("Commencer")), 8000)?.click()
         Thread.sleep(500)
 
-        // Agenda peut être hors écran : scroll
-        for (i in 0..3) {
-            if (device.hasObject(By.text("Agenda"))) break
+        // libellé : "Agenda & historique" (peut être hors écran)
+        for (i in 0..4) {
+            if (device.hasObject(By.textContains("Agenda"))) break
             device.swipe(
                 device.displayWidth / 2,
                 device.displayHeight * 2 / 3,
@@ -108,7 +108,7 @@ class ParcoursUiTest {
             Thread.sleep(300)
         }
 
-        val agendaBtn = device.findObject(By.text("Agenda"))
+        val agendaBtn = device.findObject(By.textContains("Agenda"))
         assertNotNull("Bouton Agenda introuvable", agendaBtn)
         agendaBtn.click()
         Thread.sleep(1000)
@@ -117,7 +117,8 @@ class ParcoursUiTest {
             "Écran agenda non détecté",
             device.hasObject(By.text("Agenda")) ||
                 device.hasObject(By.textContains("entraînement")) ||
-                device.hasObject(By.textContains("mois")) ||
+                device.hasObject(By.textContains("affilée")) ||
+                device.hasObject(By.textContains("semaine")) ||
                 device.hasObject(By.textContains("Série"))
         )
     }

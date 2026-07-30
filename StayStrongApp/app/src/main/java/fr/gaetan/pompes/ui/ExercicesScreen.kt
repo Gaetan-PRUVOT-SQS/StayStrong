@@ -47,6 +47,9 @@ fun ExercicesScreen(
     dernierePosition: PositionExo?,
     derniereSeanceComplete: PositionSeanceComplete?,
     modeSombre: Boolean,
+    seancesCetteSemaine: Int,
+    streakJours: Int,
+    rappelExport: Boolean,
     onChoisirExercice: (String) -> Unit,
     onReprendreExo: (PositionExo) -> Unit,
     onReprendreSeanceComplete: (PositionSeanceComplete) -> Unit,
@@ -99,9 +102,51 @@ fun ExercicesScreen(
             fontSize = 14.sp,
             color = texteGrisApp
         )
-        Spacer(modifier = Modifier.height(18.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Reprendre dernier exercice
+        // mini-stats de la semaine
+        Surface(
+            shape = RoundedCornerShape(16.dp),
+            color = carteApp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "$seancesCetteSemaine",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AccentCuivre
+                    )
+                    Text(
+                        text = "séances / 7 j",
+                        fontSize = 12.sp,
+                        color = texteGrisApp
+                    )
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "$streakJours",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AccentCuivre
+                    )
+                    Text(
+                        text = "jours d'affilée",
+                        fontSize = 12.sp,
+                        color = texteGrisApp
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // gros bouton Continuer
         if (dernierePosition != null) {
             val nom = try {
                 ProgrammeData.getExercice(dernierePosition.exerciceId).nom
@@ -110,20 +155,28 @@ fun ExercicesScreen(
             }
             Button(
                 onClick = { onReprendreExo(dernierePosition) },
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(28.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = AccentCuivre,
                     contentColor = onAccentApp
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
             ) {
-                Text(
-                    text = "▶  Reprendre · $nom N${dernierePosition.niveau} J${dernierePosition.jour}",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "▶  Continuer",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "$nom · Niv. ${dernierePosition.niveau} · Jour ${dernierePosition.jour}",
+                        fontSize = 13.sp
+                    )
+                }
             }
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
 
         // Reprendre séance complète
@@ -172,12 +225,50 @@ fun ExercicesScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "📅  Agenda",
+                text = "📅  Agenda & historique",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
+
+        // rappel d'export de temps en temps
+        if (rappelExport) {
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = AccentCuivre.copy(alpha = 0.15f),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Text(
+                        text = "💾  Pense à exporter ta progression",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = texteApp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Sauvegarde JSON recommandée tous les 14 jours.",
+                        fontSize = 13.sp,
+                        color = texteGrisApp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(
+                        onClick = onExporter,
+                        shape = RoundedCornerShape(20.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = AccentCuivre,
+                            contentColor = onAccentApp
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Exporter maintenant")
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
