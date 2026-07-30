@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+
+# Android / Gradle
+**/.gradle/
+**/build/
+**/local.properties
+**/captures/
+**/.externalNativeBuild/
+**/.cxx/
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+
+# Kotlin
+*.kotlin_module
+
+# Logs / backups
+*.log
+*~
+*.bak
