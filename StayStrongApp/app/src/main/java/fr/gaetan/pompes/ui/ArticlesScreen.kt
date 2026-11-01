@@ -60,7 +60,7 @@ fun ArticlesScreen(
 
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = "Lire pour mieux s'entraîner — contenu illustré des guides Stay Strong.",
+            text = "Lire pour mieux s'entraîner, avec le contenu illustré des guides Stay Strong.",
             fontSize = 14.sp,
             color = texteGrisApp
         )

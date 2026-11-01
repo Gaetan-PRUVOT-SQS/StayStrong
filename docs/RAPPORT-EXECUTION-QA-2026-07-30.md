@@ -1,4 +1,4 @@
-# Rapport d’exécution QA — Stay Strong
+# Rapport d’exécution QA de Stay Strong
 
 | Champ | Valeur |
 |-------|--------|
@@ -42,7 +42,7 @@ Couverture logique : séance (max + reps), progression, export/import, streak, 4
 | switchFooterVersArticles | OK | |
 | ouvrirAgenda | OK* | *Corrigé pendant le cycle : `By.text("Agenda")` → `textContains("Agenda")` (libellé « Agenda & historique ») |
 
-**1er run :** 4 OK / 1 KO (`ouvrirAgenda` — libellé obsolète)  
+**1er run :** 4 OK / 1 KO (`ouvrirAgenda`, libellé obsolète)  
 **2e run (après fix `ParcoursUiTest.kt`) :** **5/5 PASS**
 
 ---

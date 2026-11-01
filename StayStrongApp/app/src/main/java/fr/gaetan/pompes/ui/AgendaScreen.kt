@@ -204,7 +204,7 @@ fun AgendaScreen(
                 ProgrammeData.exercices.forEach { exo ->
                     val total = stats.totalParExo[exo.id] ?: 0
                     val niv = stats.dernierNiveauParExo[exo.id] ?: 0
-                    val texteNiv = if (niv <= 0) "—" else "niv. $niv"
+                    val texteNiv = if (niv <= 0) "-" else "niv. $niv"
                     Text(
                         text = "${exo.nom} : $total séance(s) · $texteNiv",
                         fontSize = 14.sp,

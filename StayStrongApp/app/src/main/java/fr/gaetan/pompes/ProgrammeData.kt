@@ -274,7 +274,7 @@ object ProgrammeData {
         )
     }
 
-    // --- Gainage (dossier Gainage/) — chaque ligne "n x t s" = n séries de t secondes ---
+    // --- Gainage (dossier Gainage/) : chaque ligne "n x t s" = n séries de t secondes ---
     private fun niveauxGainage(): List<NiveauProgramme> {
         // repos 60 s partout (règle app)
         return listOf(
@@ -341,7 +341,7 @@ object ProgrammeData {
         )
     }
 
-    // --- Killy (dossier Killy/) — maintien en secondes, série 5 = max ---
+    // --- Killy (dossier Killy/) : maintien en secondes, série 5 = max ---
     private fun niveauxKilly(): List<NiveauProgramme> {
         return listOf(
             NiveauProgramme(

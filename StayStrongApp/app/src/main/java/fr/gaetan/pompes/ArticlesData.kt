@@ -49,7 +49,7 @@ object ArticlesData {
                 ),
                 BlocArticle(
                     titre = "Les squats",
-                    texte = "Les squats sollicitent la plus grande masse musculaire du corps : quadriceps, fessiers, ischio-jambiers. Cette masse est le principal réservoir métabolique de l'organisme, ce qui rend l'exercice utile bien au-delà de la performance sportive.\n\nLe transfert vers la vie quotidienne est immédiat : se lever d'une chaise, monter un escalier, porter une charge au sol reposent sur le même schéma moteur. La descente complète entretient par ailleurs la mobilité de hanche et de cheville, qui se perd vite en position assise prolongée.\n\nAu poids de corps, le volume nécessaire est élevé — plusieurs centaines de répétitions par séance aux niveaux avancés. Cette caractéristique en fait autant un exercice cardio-respiratoire qu'un exercice de force.",
+                    texte = "Les squats sollicitent la plus grande masse musculaire du corps : quadriceps, fessiers, ischio-jambiers. Cette masse est le principal réservoir métabolique de l'organisme, ce qui rend l'exercice utile bien au-delà de la performance sportive.\n\nLe transfert vers la vie quotidienne est immédiat : se lever d'une chaise, monter un escalier, porter une charge au sol reposent sur le même schéma moteur. La descente complète entretient par ailleurs la mobilité de hanche et de cheville, qui se perd vite en position assise prolongée.\n\nAu poids de corps, le volume nécessaire est élevé : plusieurs centaines de répétitions par séance aux niveaux avancés. Cette caractéristique en fait autant un exercice cardio-respiratoire qu'un exercice de force.",
                     exerciceId = "squats",
                     emoji = "🦵"
                 ),
@@ -107,12 +107,12 @@ object ArticlesData {
                 ),
                 BlocArticle(
                     titre = "Une séance courte, sans matériel, tenable dans la durée",
-                    texte = "Le circuit complet tient en trente-cinq à quarante-cinq minutes, temps de repos inclus. Il ne demande qu'une barre de traction et un mur. Cette absence de friction — pas de trajet, pas d'abonnement, pas d'attente sur une machine — est le facteur le mieux corrélé à l'assiduité réelle sur plusieurs mois.\n\nUn seul système de niveaux gouverne les cinq exercices, avec le même format de fiche et les mêmes jours de pause. Il n'y a qu'un rythme à retenir et qu'un calendrier à tenir, ce qui compte davantage, sur un an, que l'optimalité théorique d'un programme plus compliqué.",
+                    texte = "Le circuit complet tient en trente-cinq à quarante-cinq minutes, temps de repos inclus. Il ne demande qu'une barre de traction et un mur. Cette absence de friction (pas de trajet, pas d'abonnement, pas d'attente sur une machine) est le facteur le mieux corrélé à l'assiduité réelle sur plusieurs mois.\n\nUn seul système de niveaux gouverne les cinq exercices, avec le même format de fiche et les mêmes jours de pause. Il n'y a qu'un rythme à retenir et qu'un calendrier à tenir, ce qui compte davantage, sur un an, que l'optimalité théorique d'un programme plus compliqué.",
                     emoji = "⏱"
                 ),
                 BlocArticle(
                     titre = "Des repères de progression mesurables",
-                    texte = "Chaque exercice se termine par un test chiffré. Ces cinq nombres constituent un bilan de condition physique plus complet que n'importe lequel d'entre eux pris seul, et plusieurs sont des marqueurs de santé documentés : la capacité en pompes est associée au risque cardiovasculaire, la force de préhension développée par les tractions à la mortalité toutes causes.\n\n• Tractions — force de tirage et préhension\n• Pompes — force de poussée et condition générale\n• Squats — force et endurance des jambes\n• Killy — endurance isométrique, tolérance à l'effort\n• Gainage — stabilité du tronc, symétrie gauche-droite",
+                    texte = "Chaque exercice se termine par un test chiffré. Ces cinq nombres constituent un bilan de condition physique plus complet que n'importe lequel d'entre eux pris seul, et plusieurs sont des marqueurs de santé documentés : la capacité en pompes est associée au risque cardiovasculaire, la force de préhension développée par les tractions à la mortalité toutes causes.\n\n• Tractions : force de tirage et préhension\n• Pompes : force de poussée et condition générale\n• Squats : force et endurance des jambes\n• Killy : endurance isométrique, tolérance à l'effort\n• Gainage : stabilité du tronc, symétrie gauche-droite",
                     emoji = "📊"
                 ),
                 BlocArticle(

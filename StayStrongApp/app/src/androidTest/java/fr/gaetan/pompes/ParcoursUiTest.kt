@@ -72,7 +72,7 @@ class ParcoursUiTest {
         ActivityScenario.launch(MainActivity::class.java)
 
         device.wait(Until.findObject(By.text("Commencer")), 8000)?.click()
-        // le footer a "Articles" — on clique le bas de l'écran
+        // le footer a "Articles", on clique le bas de l'écran
         val articlesFooter = device.wait(Until.findObject(By.text("Articles")), 8000)
         assertNotNull(articlesFooter)
         articlesFooter.click()

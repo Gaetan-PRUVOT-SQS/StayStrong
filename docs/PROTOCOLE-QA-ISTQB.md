@@ -1,14 +1,14 @@
-# Protocole de test QA — Stay Strong
+# Protocole de test QA de Stay Strong
 
 | Champ | Valeur |
 |-------|--------|
 | **Projet** | Stay Strong (`fr.gaetan.pompes`) |
 | **Version sous test** | 1.0 (debug) + évolutions récentes (reps max, historique, articles) |
-| **Norme** | ISTQB Foundation — processus de test en 6 phases |
+| **Norme** | ISTQB Foundation, processus de test en 6 phases |
 | **Niveau principal** | Tests système + acceptation (UAT) |
 | **Auteur / exécutant** | Gaetan Pruvot |
 | **Date** | 2026-07-30 |
-| **Environnement cible** | Pixel 8 Pro (Android 17) — min SDK 26 |
+| **Environnement cible** | Pixel 8 Pro (Android 17), min SDK 26 |
 | **Build** | `./gradlew :app:installDebug` (JDK 17) |
 
 ---
@@ -162,15 +162,15 @@
 
 ---
 
-### 5.1 Smoke (ordre d’entrée — 10 min)
+### 5.1 Smoke (ordre d’entrée, 10 min)
 
 | ID | Titre | Prio | Condition | Préconditions | Étapes | Résultat attendu | OK/KO |
 |----|-------|------|-----------|---------------|--------|------------------|-------|
 | SM-01 | Lancement | P1 | C01 | App installée | 1. Ouvrir Stay Strong | Écran démarrage ou entraînement, pas de crash | ☐ |
 | SM-02 | Footer | P1 | C02 | Sur Entraînement | 1. Taper Articles 2. Taper Entraînement | Bascules correctes, contenu adapté | ☐ |
 | SM-03 | Liste exercices | P1 | C04 | Footer Entraînement | 1. Scroller la liste | 5 cartes : Tractions, Pompes, Squats, Killy, Gainage | ☐ |
-| SM-04 | Accès agenda | P2 | C12 | — | 1. Agenda & historique | Calendrier + zone stats visibles | ☐ |
-| SM-05 | Accès articles | P2 | C19 | — | 1. Articles | 4 titres listés | ☐ |
+| SM-04 | Accès agenda | P2 | C12 | - | 1. Agenda & historique | Calendrier + zone stats visibles | ☐ |
+| SM-05 | Accès articles | P2 | C19 | - | 1. Articles | 4 titres listés | ☐ |
 
 ---
 
@@ -192,8 +192,8 @@
 | TC-SE-03 | Série fixe | P1 | C05 | 1. Faire série 1 2. « Série terminée » | Bouton cuivre → passage repos | ☐ |
 | TC-SE-04 | Repos en cours | P1 | C07 | 1. Observer repos | Label REPOS, chrono vert, barre verte, bouton « Passer le repos » vert | ☐ |
 | TC-SE-05 | Série suivante jaune | P1 | C07 | 1. Laisser finir ou passer repos | Bouton « → Série suivante » **jaune** | ☐ |
-| TC-SE-06 | Série max — refus vide | P1 | C06 | 1. Atteindre dernière série max 2. Valider sans nombre | Reste en série, pas de repos/fin | ☐ |
-| TC-SE-07 | Série max — saisie valide | P1 | C06 | 1. Saisir 12 2. Valider | Fin de jour (ou repos si pas dernière) | ☐ |
+| TC-SE-06 | Série max : refus vide | P1 | C06 | 1. Atteindre dernière série max 2. Valider sans nombre | Reste en série, pas de repos/fin | ☐ |
+| TC-SE-07 | Série max : saisie valide | P1 | C06 | 1. Saisir 12 2. Valider | Fin de jour (ou repos si pas dernière) | ☐ |
 | TC-SE-08 | Toast sauvegarde | P1 | C09 | 1. Terminer le jour | Toast « Progression sauvegardée » | ☐ |
 | TC-SE-09 | Agenda après séance | P1 | C09 C12 | 1. Ouvrir Agenda 2. Jour d’aujourd’hui | Session Pompes N1 J1 ; si max : « Max : S5: 12 » | ☐ |
 | TC-SE-10 | Arrêter en cours | P2 | C05 | 1. Pendant série 2. Arrêter | Retour exercices, jour **non** marqué si pas fini | ☐ |
@@ -227,7 +227,7 @@
 | TC-SC-03 | Fin complète | P1 | C13 | 1. Finir les 5 | Message « Séance complète terminée » | ☐ |
 | TC-SC-04 | Reprendre complète | P2 | C10 | 1. Depuis accueil 2. Séance complète mémorisée | Prefill N/J corrects | ☐ |
 
-*Note : TC-SC-02/03 longs — acceptable en smoke partiel (1er enchaînement seulement) si temps limité ; cocher B + note.*
+*Note : TC-SC-02/03 longs, acceptable en smoke partiel (1er enchaînement seulement) si temps limité ; cocher B + note.*
 
 #### F. Tests de passage
 
@@ -264,14 +264,14 @@
 | TC-AR-01 | Liste | P2 | C19 | 1. Onglet Articles | 4 cartes (exercices, circuit, échauffement, récupération) | ☐ |
 | TC-AR-02 | Lecture | P2 | C19 | 1. Ouvrir chaque article 2. Scroller 3. Retour | Blocs lisibles, retour liste OK | ☐ |
 
-#### J. Partitions / limites — saisie reps
+#### J. Partitions / limites : saisie reps
 
 | ID | Titre | Prio | Cond. | Technique | Entrée | Résultat attendu | OK/KO |
 |----|-------|------|-------|-----------|--------|------------------|-------|
 | TC-BV-01 | Vide | P1 | C06 | EP invalide | (vide) | Pas de validation | ☐ |
 | TC-BV-02 | Zéro | P1 | C06 | EP / BVA | `0` | Pas de validation | ☐ |
 | TC-BV-03 | Min programme | P1 | C06 | BVA | ex. `5` si min 5 | Accepté | ☐ |
-| TC-BV-04 | Sous le min (volontaire) | P2 | C06 | EP | min-1 | **Accepté** (on enregistre l’échec technique) — documenter le comportement réel | ☐ |
+| TC-BV-04 | Sous le min (volontaire) | P2 | C06 | EP | min-1 | **Accepté** (on enregistre l’échec technique), documenter le comportement réel | ☐ |
 | TC-BV-05 | Grand nombre | P3 | C06 | EP | `999` | Accepté, affiché agenda | ☐ |
 | TC-BV-06 | Lettres | P2 | C06 | EP invalide | tenter `ab` | Champ refuse non-chiffres | ☐ |
 
@@ -438,9 +438,9 @@ Statut      : Ouvert | Corrigé | Retest OK | Reporté | Rejeté
 
 **Recommandation** :
 
-- [ ] **GO** — usage perso / partage OK
-- [ ] **GO avec réserves** — lister les réserves
-- [ ] **NO-GO** — bloquants à corriger
+- [ ] **GO** : usage perso / partage OK
+- [ ] **GO avec réserves** : lister les réserves
+- [ ] **NO-GO** : bloquants à corriger
 
 **Signature exécutant** : _____________  **Date** : _____________
 

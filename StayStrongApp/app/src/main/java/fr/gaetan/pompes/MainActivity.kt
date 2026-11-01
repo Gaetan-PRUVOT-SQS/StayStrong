@@ -646,7 +646,7 @@ class MainActivity : ComponentActivity() {
         clipboard.setPrimaryClip(ClipData.newPlainText("Stay Strong", json))
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "application/json"
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Stay Strong — sauvegarde")
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Stay Strong : sauvegarde")
         intent.putExtra(Intent.EXTRA_TEXT, json)
         startActivity(Intent.createChooser(intent, "Exporter mes données"))
         Toast.makeText(this, "Copié dans le presse-papiers", Toast.LENGTH_SHORT).show()

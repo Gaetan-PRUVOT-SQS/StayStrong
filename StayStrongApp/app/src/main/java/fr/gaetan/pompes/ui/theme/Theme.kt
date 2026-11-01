@@ -9,7 +9,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-// Palette A — crème + cuivre (clair)
+// Palette A : crème + cuivre (clair)
 val FondCrema = Color(0xFFF7F4F0)
 val TexteNoir = Color(0xFF1A1A1A)
 val TexteGris = Color(0xFF6B6B6B)
