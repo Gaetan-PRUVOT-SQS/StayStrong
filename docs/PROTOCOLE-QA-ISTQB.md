@@ -55,7 +55,7 @@
 
 ## 2. Analyse de risques (likelihood × impact)
 
-Échelle 1–5 pour **L** (vraisemblance) et **I** (impact). **Score = L × I**. Priorité de test proportionnelle au score.
+Échelle 1 à 5 pour **L** (vraisemblance) et **I** (impact). **Score = L × I**. Priorité de test proportionnelle au score.
 
 | ID | Risque | L | I | Score | Zone impactée |
 |----|--------|---|---|-------|----------------|
@@ -446,7 +446,7 @@ Statut      : Ouvert | Corrigé | Retest OK | Reporté | Rejeté
 
 ---
 
-## 11. Ordre d’exécution recommandé (session 60–90 min)
+## 11. Ordre d’exécution recommandé (session 60 à 90 min)
 
 | Phase | Durée | Cas |
 |-------|-------|-----|
@@ -460,7 +460,7 @@ Statut      : Ouvert | Corrigé | Retest OK | Reporté | Rejeté
 | 7. UAT express | 10 min | PC-01, PC-02, PC-04 |
 | 8. Bilan | 5 min | Section 10 + fiches défaut |
 
-*Séance complète (TC-SC) : session séparée 45–60 min si besoin.*
+*Séance complète (TC-SC) : session séparée 45 à 60 min si besoin.*
 
 ---
 

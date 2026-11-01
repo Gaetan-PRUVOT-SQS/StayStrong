@@ -145,13 +145,13 @@ object ArticlesData {
                     emoji = "📖"
                 ),
                 BlocArticle(
-                    titre = "Routine simple (5–8 min)",
+                    titre = "Routine simple (5 à 8 min)",
                     texte = "1. 1 à 2 minutes de marche sur place ou de jumping jacks légers.\n2. Cercles d'épaules (avant / arrière), 10 de chaque côté.\n3. Rotations de poignets et de hanches, 10 de chaque côté.\n4. Squats au poids de corps lents : 8 à 10 reps, amplitude confortable.\n5. 5 à 8 pompes sur les genoux ou surélevées, très contrôlées.\n6. Option traction : 1 série de 3 à 5 tractions assistées (bande, chaise) ou de scapular pulls (épaules qui descendent sans plier les coudes).",
                     emoji = "⏱"
                 ),
                 BlocArticle(
                     titre = "Ce qu'il ne faut pas faire",
-                    texte = "Éviter les étirements statiques longs juste avant la force (tenir 30–60 s en position étirée). Préférer le mouvement dynamique. Ne pas « vider » les bras avant les tractions : l'échauffement doit préparer, pas fatiguer.",
+                    texte = "Éviter les étirements statiques longs juste avant la force (tenir 30 à 60 s en position étirée). Préférer le mouvement dynamique. Ne pas « vider » les bras avant les tractions : l'échauffement doit préparer, pas fatiguer.",
                     emoji = "🚫"
                 ),
                 BlocArticle(
